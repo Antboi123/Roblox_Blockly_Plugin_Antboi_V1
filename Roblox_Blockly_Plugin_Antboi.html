@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Roblox Blockly Plugin - Antboi</title>
+  <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: sans-serif;
+    }
+    #blocklyDiv {
+      height: 80vh;
+      width: 70%;
+      float: left;
+    }
+    #codeArea {
+      width: 30%;
+      height: 80vh;
+      float: right;
+      background: #1e1e1e;
+      color: #00ff88;
+      padding: 10px;
+      box-sizing: border-box;
+      white-space: pre-wrap;
+      overflow-y: auto;
+    }
+    #controls {
+      height: 20vh;
+      width: 100%;
+      padding: 10px;
+      background: #111;
+      color: white;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 8px 12px;
+      background: #00aaff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="blocklyDiv"></div>
+  <pre id="codeArea">-- Your Lua code will appear here...</pre>
+  <div id="controls">
+    <button onclick="copyCode()">Copy Code</button>
+  </div>
+
+  <xml id="toolbox" style="display: none">
+    <category name="Events">
+      <block type="touched_event"></block>
+      <block type="clicked_event"></block>
+      <block type="proximity_prompt_event"></block>
+    </category>
+    <category name="Actions">
+      <block type="teleport_player"></block>
+      <block type="announcement"></block>
+      <block type="coin_flip"></block>
+    </category>
+    <category name="GUI">
+      <block type="create_gui_frame"></block>
+      <block type="show_gui"></block>
+      <block type="hide_gui"></block>
+      <block type="create_button"></block>
+      <block type="change_text"></block>
+    </category>
+    <category name="Control">
+      <block type="controls_if"></block>
+      <block type="controls_repeat_ext"></block>
+      <block type="wait_seconds"></block>
+      <block type="custom_function"></block>
+    </category>
+    <category name="Variables" custom="VARIABLE"></category>
+    <category name="Math">
+      <block type="math_number"></block>
+      <block type="math_arithmetic"></block>
+    </category>
+    <category name="Logic">
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+    </category>
+    <category name="Comments">
+      <block type="comment_block"></block>
+    </category>
+  </xml>
+
+  <script>
+    const workspace = Blockly.inject('blocklyDiv', {
+      toolbox: document.getElementById('toolbox')
+    });
+
+    function updateCode() {
+      const code = Blockly.Lua.workspaceToCode(workspace);
+      document.getElementById('codeArea').innerText = code;
+    }
+
+    workspace.addChangeListener(updateCode);
+
+    function copyCode() {
+      const code = document.getElementById('codeArea').innerText;
+      navigator.clipboard.writeText(code);
+      alert("Code copied to clipboard!");
+    }
+
+    Blockly.defineBlocksWithJsonArray([
+      {
+        "type": "touched_event",
+        "message0": "when part is touched %1 %2",
+        "args0": [
+          { "type": "input_dummy" },
+          { "type": "input_statement", "name": "DO" }
+        ],
+        "colour": 160,
+        "tooltip": "Run when a part is touched.",
+        "helpUrl": ""
+      },
+      {
+        "type": "clicked_event",
+        "message0": "when clicked %1 %2",
+        "args0": [
+          { "type": "input_dummy" },
+          { "type": "input_statement", "name": "DO" }
+        ],
+        "colour": 160
+      },
+      {
+        "type": "proximity_prompt_event",
+        "message0": "when prompted %1 %2",
+        "args0": [
+          { "type": "input_dummy" },
+          { "type": "input_statement", "name": "DO" }
+        ],
+        "colour": 160
+      },
+      {
+        "type": "teleport_player",
+        "message0": "teleport to x: %1 y: %2 z: %3",
+        "args0": [
+          { "type": "input_value", "name": "X" },
+          { "type": "input_value", "name": "Y" },
+          { "type": "input_value", "name": "Z" }
+        ],
+        "colour": 230
+      },
+      {
+        "type": "announcement",
+        "message0": "announce message: %1",
+        "args0": [
+          { "type": "input_value", "name": "MSG" }
+        ],
+        "colour": 230
+      },
+      {
+        "type": "coin_flip",
+        "message0": "coin flip",
+        "output": null,
+        "colour": 230
+      },
+      {
+        "type": "create_gui_frame",
+        "message0": "create GUI frame",
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 20
+      },
+      {
+        "type": "show_gui",
+        "message0": "show GUI",
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 20
+      },
+      {
+        "type": "hide_gui",
+        "message0": "hide GUI",
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 20
+      },
+      {
+        "type": "create_button",
+        "message0": "create button labeled %1",
+        "args0": [
+          { "type": "input_value", "name": "LABEL" }
+        ],
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 20
+      },
+      {
+        "type": "change_text",
+        "message0": "change button text to %1",
+        "args0": [
+          { "type": "input_value", "name": "TEXT" }
+        ],
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 20
+      },
+      {
+        "type": "wait_seconds",
+        "message0": "wait %1 seconds",
+        "args0": [
+          { "type": "input_value", "name": "SECONDS" }
+        ],
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 120
+      },
+      {
+        "type": "custom_function",
+        "message0": "define function %1 %2",
+        "args0": [
+          { "type": "field_input", "name": "NAME", "text": "myFunction" },
+          { "type": "input_statement", "name": "DO" }
+        ],
+        "colour": 290
+      },
+      {
+        "type": "comment_block",
+        "message0": "comment %1",
+        "args0": [
+          { "type": "field_input", "name": "TEXT", "text": "your comment here" }
+        ],
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 60
+      }
+    ]);
+
+    Blockly.Lua['touched_event'] = function(block) {
+      const branch = Blockly.Lua.statementToCode(block, 'DO');
+      return 'script.Parent.Touched:Connect(function(hit)\n' + branch + 'end)\n';
+    };
+
+    Blockly.Lua['clicked_event'] = function(block) {
+      const branch = Blockly.Lua.statementToCode(block, 'DO');
+      return 'script.Parent.MouseClick:Connect(function()\n' + branch + 'end)\n';
+    };
+
+    Blockly.Lua['proximity_prompt_event'] = function(block) {
+      const branch = Blockly.Lua.statementToCode(block, 'DO');
+      return 'script.Parent.Triggered:Connect(function()\n' + branch + 'end)\n';
+    };
+
+    Blockly.Lua['teleport_player'] = function(block) {
+      const x = Blockly.Lua.valueToCode(block, 'X', Blockly.Lua.ORDER_ATOMIC) || 0;
+      const y = Blockly.Lua.valueToCode(block, 'Y', Blockly.Lua.ORDER_ATOMIC) || 0;
+      const z = Blockly.Lua.valueToCode(block, 'Z', Blockly.Lua.ORDER_ATOMIC) || 0;
+      return `game.Players.LocalPlayer.Character:MoveTo(Vector3.new(${x}, ${y}, ${z}))\n`;
+    };
+
+    Blockly.Lua['announcement'] = function(block) {
+      const msg = Blockly.Lua.valueToCode(block, 'MSG', Blockly.Lua.ORDER_ATOMIC) || '"Hello!"';
+      return `game.StarterGui:SetCore("SendNotification", {Title="Announcement", Text=${msg}})\n`;
+    };
+
+    Blockly.Lua['coin_flip'] = function(block) {
+      return ['math.random() < 0.5', Blockly.Lua.ORDER_ATOMIC];
+    };
+
+    Blockly.Lua['create_gui_frame'] = () => 'local frame = Instance.new("Frame", script.Parent)\n';
+    Blockly.Lua['show_gui'] = () => 'frame.Visible = true\n';
+    Blockly.Lua['hide_gui'] = () => 'frame.Visible = false\n';
+
+    Blockly.Lua['create_button'] = function(block) {
+      const label = Blockly.Lua.valueToCode(block, 'LABEL', Blockly.Lua.ORDER_ATOMIC) || '"Click me"';
+      return `local btn = Instance.new("TextButton", frame)\nbtn.Text = ${label}\n`;
+    };
+
+    Blockly.Lua['change_text'] = function(block) {
+      const text = Blockly.Lua.valueToCode(block, 'TEXT', Blockly.Lua.ORDER_ATOMIC) || '"New Text"';
+      return `btn.Text = ${text}\n`;
+    };
+
+    Blockly.Lua['wait_seconds'] = function(block) {
+      const seconds = Blockly.Lua.valueToCode(block, 'SECONDS', Blockly.Lua.ORDER_ATOMIC) || '1';
+      return `wait(${seconds})\n`;
+    };
+
+    Blockly.Lua['custom_function'] = function(block) {
+      const name = block.getFieldValue('NAME');
+      const branch = Blockly.Lua.statementToCode(block, 'DO');
+      return `function ${name}()\n${branch}end\n`;
+    };
+
+    Blockly.Lua['comment_block'] = function(block) {
+      const text = block.getFieldValue('TEXT') || '';
+      return `-- ${text}\n`;
+    };
+  </script>
+</body>
+</html>
