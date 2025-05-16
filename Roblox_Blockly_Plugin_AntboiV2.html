@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Roblox Blockly Plugin</title>
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <style>
+      html, body { height: 100%; margin: 0; display: flex; }
+      #blocklyDiv { height: 100vh; width: 70vw; }
+      #luaOutput {
+        width: 30vw;
+        padding: 10px;
+        background: #1e1e1e;
+        color: #00ff88;
+        font-family: monospace;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="blocklyDiv"></div>
+    <pre id="luaOutput">// Roblox Lua code will appear here</pre>
+
+    <xml id="toolbox" style="display: none">
+      <category name="Events" colour="210">
+        <block type="on_game_start"></block>
+        <block type="on_part_touched"></block>
+      </category>
+      <category name="Actions" colour="120">
+        <block type="teleport_player"></block>
+        <block type="set_text"></block>
+      </category>
+      <category name="Logic" colour="210">
+        <block type="controls_if"></block>
+        <block type="logic_compare"></block>
+      </category>
+      <category name="Variables" colour="330" custom="VARIABLE"></category>
+    </xml>
+
+    <script>
+      const workspace = Blockly.inject("blocklyDiv", {
+        toolbox: document.getElementById("toolbox"),
+        trashcan: true
+      });
+
+      // Custom Blocks
+      Blockly.defineBlocksWithJsonArray([
+        {
+          type: "on_game_start",
+          message0: "when game starts",
+          nextStatement: null,
+          colour: 210,
+          tooltip: "Run this code when the game starts",
+          helpUrl: ""
+        },
+        {
+          type: "on_part_touched",
+          message0: "when part is touched",
+          nextStatement: null,
+          colour: 210,
+          tooltip: "Triggers when a part is touched",
+          helpUrl: ""
+        },
+        {
+          type: "teleport_player",
+          message0: "teleport player to x %1 y %2 z %3",
+          args0: [
+            { type: "input_value", name: "X" },
+            { type: "input_value", name: "Y" },
+            { type: "input_value", name: "Z" }
+          ],
+          previousStatement: null,
+          nextStatement: null,
+          colour: 120,
+          tooltip: "Teleports the player",
+          helpUrl: ""
+        },
+        {
+          type: "set_text",
+          message0: "set text of element to %1",
+          args0: [{ type: "input_value", name: "TEXT" }],
+          previousStatement: null,
+          nextStatement: null,
+          colour: 120,
+          tooltip: "Sets GUI text",
+          helpUrl: ""
+        }
+      ]);
+
+      // Lua Generator
+      Blockly.Lua["on_game_start"] = function () {
+        return "-- Game start event\n";
+      };
+      Blockly.Lua["on_part_touched"] = function () {
+        return "part.Touched:Connect(function(hit)\n";
+      };
+      Blockly.Lua["teleport_player"] = function (block) {
+        const x = Blockly.Lua.valueToCode(block, "X", Blockly.Lua.ORDER_NONE) || 0;
+        const y = Blockly.Lua.valueToCode(block, "Y", Blockly.Lua.ORDER_NONE) || 0;
+        const z = Blockly.Lua.valueToCode(block, "Z", Blockly.Lua.ORDER_NONE) || 0;
+        return `player.Character.HumanoidRootPart.CFrame = CFrame.new(${x}, ${y}, ${z})\n`;
+      };
+      Blockly.Lua["set_text"] = function (block) {
+        const text = Blockly.Lua.valueToCode(block, "TEXT", Blockly.Lua.ORDER_ATOMIC) || '"Hello"';
+        return `script.Parent.Text = ${text}\n`;
+      };
+
+      function updateCode() {
+        const code = Blockly.Lua.workspaceToCode(workspace);
+        document.getElementById("luaOutput").textContent = code || "// Roblox Lua code will appear here";
+      }
+
+      workspace.addChangeListener(updateCode);
+    </script>
+  </body>
+</html>
